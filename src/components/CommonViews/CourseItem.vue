@@ -1,19 +1,32 @@
 <template>
-    <div class="courseItem">
-        <img :src="course.coverImage" alt="">
-        <div class="right">
-        <router-link :to="{path:'/courseDetail',query:{id:course.courseId}}">
-            <span class="title"> {{course.title}} </span>
-            <span class="subtitle"> {{course.subtitle}} </span>
-            <span class="author"> {{course.author}} | {{course.intro}} </span>
-            <span class="total"> 共{{course.totalPublishNo}}节 </span>
-        </router-link>
-        </div>
+    <div class="courseItem" @click="gotoCourseDetail(course.courseId ? course.courseId : course.id)">
+        <!-- <router-link :to="{ path: '/courseDetail', query: { id: course.courseId ? course.courseId : course.id } }"> -->
+            <img :src="course.coverImage" alt="">
+            <div class="right">
+                <span class="title ellipsis-2"> {{ course.title }} </span>
+                <span class="subtitle ellipsis"> {{ course.subtitle }} {{ course.subTitle }} </span>
+                <span class="author ellipsis" v-if="course.intro"> {{ course.author }} | {{ course.intro }} </span>
+                <span class="author ellipsis" v-else-if="course.introduct"> {{ course.author }} | {{ course.introduct }} </span>
+                <span class="author" v-else> {{ course.author }} </span>
+                <span class="total"> 共{{ course.totalPublishNo }}节 </span>
+            </div>
+        <!-- </router-link> -->
     </div>
 </template>
 <script>
+import { useRouter } from 'vue-router';
+
 export default {
-    props:["course"],
+
+    setup(){
+        const router = useRouter();
+        const gotoCourseDetail = (id) =>{
+            router.push({path:'/courseDetail',query:{id:id}})
+        }
+        return { gotoCourseDetail }
+    },
+
+    props: ["course"],
 };
 </script>
 
@@ -22,26 +35,29 @@ export default {
     width: 100%;
     padding: .1rem 0;
     display: flex;
+
     img {
         border-radius: 5px;
-        width: 20%;
+        width: 25%;
     }
+
     .right {
-        width: 80%;
+        width: 75%;
         display: flex;
         flex-direction: column;
         padding-left: .3rem;
+        position: relative;
         span {
-            display:block;
-            word-break:keep-all; 
-            white-space:nowrap; 
-            overflow:hidden; /* 内容超出宽度时隐藏超出部分的内容 */
-            text-overflow:ellipsis; /* 当对象内文本溢出时显示省略标记(...) ；需与overflow:hidden;一起使用。*/
             color: #ccc;
         }
+
         .title {
             color: black;
             font-size: 20px;
+        }
+        .total {
+            position: absolute;
+            bottom: 0;
         }
     }
 }

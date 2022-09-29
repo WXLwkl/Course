@@ -6,7 +6,6 @@ let plugins = [
 
 export default function usePlugins(app){
     plugins.forEach((item)=>{
-        console.log(item)
         return app.use(item)
     })
 }

@@ -7,7 +7,7 @@
          <van-button type="warning">警告按钮</van-button>
          <van-button type="danger">危险按钮</van-button> -->
          <van-swipe :autoplay="3000" lazy-render>
-            <van-swipe-item v-for="course in courses" :key="course">
+            <van-swipe-item v-for="course in courses" :key="course" @click="gotoCourseDetail(course)">
                 <img :src="course.image" />
             </van-swipe-item>
         </van-swipe>
@@ -16,9 +16,32 @@
 </template>
 
 <script>
+import { useRouter } from 'vue-router';
+
 export default {
   setup(props) {
-    console.log(props)
+
+    const router = useRouter();
+
+    function gotoCourseDetail(course) {
+        const jumpUrl = course.jumpUrl
+        const str = jumpUrl.substr(jumpUrl.indexOf('?') + 1)
+        const array = str.split('&')
+        
+        let albumId = ""
+        for (const value of array) {
+            const element = value.split('=');
+            if (element[0] == "albumId") {
+                albumId = element[1]
+                break
+            }
+        }
+
+        if (albumId.length) {
+            router.push({path:'/courseDetail',query:{id:albumId}})
+        }
+    }
+    return { gotoCourseDetail }
   },
   props:["courses"],
 };

@@ -3,7 +3,7 @@
       <TopBanner :courses="data.banners"/>
       <IPCardsView :ipCards="data.ipCards"/>
       <RecommendView :hotTopCourses="data.hotTopCourses" />
-      <AllLearnView :recCourses="data.recCourses" />
+      <!-- <AllLearnView :recCourses="data.recCourses" /> -->
     </div>
   </template>
   
@@ -13,13 +13,12 @@
   import { getData } from '@/request/api/home.js'
   import { onMounted, reactive } from 'vue';
   import IPCardsView from '@/components/home/IPCardsView.vue';
-  import RecommendView from '@/components/home/RecommendView.vue';
+  import RecommendView from '@/components/home/RecommendItem.vue';
   import AllLearnView from '@/components/home/AllLearnView.vue';
   
   export default {
     name: 'HomeView',
-    setup() {
-  
+    setup(props, context) {
       const data = reactive({
         banners: [],
         ipCards: [],
@@ -28,13 +27,14 @@
       })
   
       onMounted(async ()=>{
+        
         let res = await getData();
-        console.log(res.data.data)
-        data.banners = res.data.data.banners
-        data.ipCards = res.data.data.ipCards
-        data.hotTopCourses = res.data.data.hotTopCourses
-        data.recCourses = res.data.data.recCourses
-        console.log(res.data.data.recCourses)
+        data.banners = res.data.banners
+        data.ipCards = res.data.ipCards
+        data.hotTopCourses = res.data.hotTopCourses
+        data.recCourses = res.data.recCourses
+
+        context.emit("getTabItems", res.data.headCategories)
       })
   
       return { data }
@@ -48,3 +48,9 @@
   }
   </script>
    
+   <style lang="less" scoped>
+  .recommend {
+    width: 100%;
+    padding-top: 10px;
+  }
+   </style>

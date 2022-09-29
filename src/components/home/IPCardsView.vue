@@ -13,9 +13,6 @@
 
 <script>
 export default {
-    setup(props) {
-        console.log(props)
-    },
     props:["ipCards"],
 };
 </script>

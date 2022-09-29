@@ -13,7 +13,6 @@ import CourseItem from '../CommonViews/CourseItem.vue';
 export default {
     setup(props) {
         // const courseList = props.hotTopCourses.topCourse
-        console.log(props);
         // return { courseList }
     },
     props: ["recCourses"],

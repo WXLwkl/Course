@@ -2,28 +2,23 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import RecommendView from "../views/RecommendView.vue";
 import TypeCourseView from "../views/TypeCourseView.vue";
+import store from '@/store/index.js'
 
 const routes = [
   {
     path: "/",
-    name: "home",
+    name: "HomeView",
     component: HomeView,
-    children: [
-      {
-        path: "/recommendView",
-        name: "recommendView",
-        component: RecommendView,
-      },
-      {
-        path: "/typeCourseView",
-        name: "typeCourseView",
-        component: TypeCourseView,
-      },
-    ],
+    meta: {
+      keepAlive: true,
+    },
   },
   {
     path: "/courseDetail",
-    name: "courseDetail",
+    name: "CourseDetailView",
+    meta: {
+      keepAlive: true,
+    },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -31,7 +26,7 @@ const routes = [
   },
   {
     path: "/programView",
-    name: "programView",
+    name: "ProgramView",
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -39,7 +34,7 @@ const routes = [
   },
   {
     path: "/search",
-    name: "search",
+    name: "SearchView",
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -47,7 +42,7 @@ const routes = [
   },
   {
     path: "/about",
-    name: "about",
+    name: "AboutView",
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -67,6 +62,42 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition;
+    } else {
+      return { top: 0 };
+    }
+  },
 });
+router.beforeEach((to,from)=>{
+  store.state.player.isShowMusicItem = (to.path !='/programView')
+})
+
+// router.beforeEach((to, from, next) => {
+
+//   console.log(to.name, from.name, "=========")
+
+//   const toDepth = to.path.split("/").length;
+//   const fromDepth = from.path.split("/").length;
+// 
+//   const isPush = toDepth > fromDepth || to.path === store.state.pushPath;
+//   to.meta.transitionName =
+//     toDepth > fromDepth ?
+//       'slide-left' :
+//       (to.path === store.state.pushPath ?
+//         'slide-left' :
+//         'slide-right');
+
+//   if (to.meta.keepAlive) {
+//     store.commit("addIncludes", to.name);
+//   }
+
+//   if (from.meta.keepAlive && !isPush) {
+//     store.commit("minusIncludes", from.name);
+//   }
+
+//   next();
+// });
 
 export default router;

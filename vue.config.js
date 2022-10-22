@@ -9,7 +9,6 @@ module.exports = defineConfig({
   publicPath: './',
   // 输出文件目录
   outputDir: 'dist',
-  assetsDir: 'assets',
   configureWebpack: {
     plugins: [
       ComponentsPlugin({

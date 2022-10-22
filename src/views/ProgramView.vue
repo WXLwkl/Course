@@ -46,10 +46,10 @@
 <script>
 import { getCourseProgramInfo } from "@/request/api/home";
 import { onMounted, reactive, ref, watch } from "vue";
-import { useRoute } from "vue-router";
-
+import { useRoute, useRouter } from "vue-router";
 import { computed } from '@vue/reactivity';
 import { mapMutations, useStore } from 'vuex';
+import router from "@/router";
 
 export default {
   setup() {
@@ -61,16 +61,23 @@ export default {
       let res = await getCourseProgramInfo(param.albumId, param.programId, param.fragmentId);
       data.info = res.data;
       // console.log(res.data);
+      console.log("onMounted---")
     });
+
+    console.log("加载了 -------")
 
     const store = useStore();
     let playerInfo = computed(() => {
       return store.state.player
     })
+  
+    const router = useRouter();
 
     watch(()=>playerInfo.value.playListIndex, async ()=>{
-      let param = playerInfo.value.playList[playerInfo.value.playListIndex]
-      let res = await getCourseProgramInfo(param.albumId, param.id, param.fragmentId);
+      let program = playerInfo.value.playList[playerInfo.value.playListIndex]
+      // console.log(program.albumId, program.id, program.fragmentId)
+      router.replace({ path: '/programView', query: { albumId: program.albumId, programId: program.id, fragmentId: program.fragmentId } })      
+      let res = await getCourseProgramInfo(program.albumId, program.id, program.fragmentId);
       data.info = res.data;
     })
 
